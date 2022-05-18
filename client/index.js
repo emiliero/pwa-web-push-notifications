@@ -97,6 +97,16 @@ const client = (() => {
             return outputArray;
         }
 
+        const subscribeWithServer = (subscription) => {
+            return fetch('http://localhost:3000/addSubscriber', {
+                method: 'POST',
+                body: JSON.stringify(subscription),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
         const subscribeUser = () => {
             const appServerPublicKey = "BMMZ-619ACjxnbh1fwAPYsrAtEXPZ8YyoIGPHyqGfU7iTYTg45RWjKPzorG1_wP1WW5Y9SkEm4lHUyJv4wg5pHw";
             const publicKeyAsArray = url864ToUint8Array(appServerPublicKey);
@@ -106,14 +116,29 @@ const client = (() => {
                 applicationServerKey: publicKeyAsArray
             }).then(subscription => {
                 console.log(JSON.stringify(subscription, null, 4));
+                subscribeWithServer(subscription);
                 disablePushNotificationButton();
             }).catch(error => console.error("Failed to ubscribe to Push Service", error))
         }
+
+        const unsubscribeWithServer = (subscription) => {
+            return fetch('http://localhost:3000/removeSubscriber', {
+                method: 'POST',
+                body: JSON.stringify({subscription}),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
         const unSubscribeUser = () => {
             console.log("un-subscribing user")
             serviceWorkerRegObj.pushManager.getSubscription()
                 .then(subscription => {
-                    if (subscription) return subscription.unsubscribe();
+                    let subAsString = JSON.stringify(subscription);
+                    let subAsObject = JSON.parse(subAsString);
+                    unsubscribeWithServer(subAsObject.keys.auth);
+                    return subscription.unsubscribe();
                 })
                 .then(enablePushNotificationButton())
                 .catch(error => console.error("Failed ot unsubscribe from Push Service", error))
