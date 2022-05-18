@@ -9,6 +9,7 @@ const client = (() => {
         notificationButton.addEventListener("click", showNotification)
     }
 
+    let count = 1;
     const showNotification = () => {
         const simpleTextNotification = reg => reg.showNotification("My first notification");
 
@@ -16,6 +17,7 @@ const client = (() => {
             const options = {
                 body: "This is an important body!",
                 icon: "imgs/notification.png",
+                tag: "group-1",
                 actions: [
                     {action: "search", title: "Try searching"},
                     {action: "close", title: "Forget it!"},
@@ -25,7 +27,7 @@ const client = (() => {
                     githubUser: "emiliero",
                 }
             }
-            reg.showNotification("Second Notification", options)
+            reg.showNotification("Second Notification - " + count++, options)
         }
 
         navigator.serviceWorker.getRegistration()

@@ -10,6 +10,9 @@ self.addEventListener("notificationclick", event => {
         clients.openWindow(`https://rebrand.ly/funny-dog`);
     }
     console.log("notification clicked", event.notification.data);
+
+    self.registration.getNotifications()
+        .then(ns => ns.forEach(n => n.close()));
 });
 
 self.addEventListener("push", event => {
