@@ -15,9 +15,13 @@ const client = (() => {
                 body: "This is an important body!",
                 icon: "imgs/notification.png",
                 actions: [
-                    {action: "search", title: "Try serching"},
+                    {action: "search", title: "Try searching"},
                     {action: "close", title: "Forget it!"},
                 ],
+                data: {
+                    notificationTime: Date.now(),
+                    githubUser: "emiliero",
+                }
             }
             reg.showNotification("Second Notification", options)
         }
